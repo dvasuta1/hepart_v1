@@ -44,20 +44,20 @@ chrome.runtime.onUpdateAvailable.addListener(function (details) {
 });
 
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    chrome.tabs.query(
-        { currentWindow: true, active: true },
-        function (tabArray) {
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//     chrome.tabs.query(
+//         { currentWindow: true, active: true },
+//         function (tabArray) {
 
-   if (tabArray.length !== 0 && tabArray[0].status == 'complete') {   
-debugger;
-            chrome.tabs.executeScript(tabArray[0].id, {
-                file: 'js/content_script.js'
-             }, function() { 
+//    if (tabArray.length !== 0 && tabArray[0].status == 'complete') {   
+// debugger;
+//             chrome.tabs.executeScript(tabArray[0].id, {
+//                 file: 'js/content_script.js'
+//              }, function() { 
 
-            })
-        }
+//             })
+//         }
 
-        }
-    );
-}); 
+//         }
+//     );
+// }); 
