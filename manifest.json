@@ -34,9 +34,9 @@
       "img/*",
       "css/*",
       "js/content_script.js"
-    ],
+    ],  
     "permissions": [
-        "<all_urls>",
+        "https://www.copart.com/*",
         "activeTab",
         "storage",
         "tabs",

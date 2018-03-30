@@ -12,7 +12,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
                 if (!stored_options.hasOwnProperty(option)) {
                     new_options[option] = default_options[option];
                 }
-            } 
+            }
             if (Object.keys(new_options).length !== 0) {
                 // save to area if new default options is appeared
                 storage.area.set(new_options, function () {
@@ -29,11 +29,11 @@ chrome.runtime.onInstalled.addListener(function (details) {
     }
 
     switch (details.reason) {
-    case 'update':
-        setDefaults();
-        break;
-    default:
-        break;
+        case 'update':
+            setDefaults();
+            break;
+        default:
+            break;
     }
 });
 
@@ -61,3 +61,10 @@ chrome.runtime.onUpdateAvailable.addListener(function (details) {
 //         }
 //     );
 // }); 
+
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    if (changeInfo.status == 'complete' && tab.active) {
+        chrome.tabs.sendMessage(tab.id, { action: 'drawHepartBtn' });
+    }
+})
