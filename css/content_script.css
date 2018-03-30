@@ -1,0 +1,20 @@
+#hepart_button {
+	color: white;
+    border-radius: 7px;
+    padding: 3px 10px 3px 35px;
+    background-color: gray; 
+   	background-image:url('chrome-extension://__MSG_@@extension_id__/img/ext_icons/ic_bus_articulated_front_black_18dp.png');
+   	background-repeat: no-repeat;
+   	background-size: contain;
+   	background-position: 5px center;
+}
+#hepart_button.active { 
+	cursor: pointer;
+    background-color: orange; 
+}
+.hepart_row {
+	background-color: orange;
+}
+.sold.hepart_final_price {
+	background-color: orange;
+}

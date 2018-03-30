@@ -1,0 +1,22 @@
+{
+    "hepart_run": {
+        "message": "Let's Hepart!",
+        "description": "Run button"
+    },
+    "hepart_repair_cost": {
+        "message": "Est. Repair Cost:",
+        "description": "Est. Repair Cost"
+    },
+    "hepart_seller_type": {
+        "message": "Seller type:",
+        "description": "Seller type"
+    },
+    "hepart_seller_name": {
+        "message": "Seller:",
+        "description": "Seller name"
+    },
+    "hepart_final_price": {
+        "message": "Sold for ",
+        "description": "Final price"
+    }   
+}

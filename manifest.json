@@ -1,0 +1,45 @@
+{
+    "name": "Hepart",
+    "description": "Показать всё, что скрыто",
+    "version": "0.1",
+    "manifest_version": 2,
+    "minimum_chrome_version": "25",
+    "default_locale": "en",
+    "icons": {
+        "16": "img/ext_icons/ic_bus_articulated_front_black_18dp.png",
+        "48": "img/ext_icons/ic_bus_articulated_front_black_48dp.png"
+    },
+
+    "page_action": {
+        "default_icon": {
+            "19": "img/ext_icons/ic_bus_articulated_front_black_18dp.png",
+            "38": "img/ext_icons/ic_bus_articulated_front_black_48dp.png"
+        },
+        "default_title": "Hepart"
+    },
+
+    "background": {
+        "scripts": ["js/storage.js", "js/background.js"],
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "css": ["css/content_script.css"],
+            "js": ["js/jquery.min.js", "js/content_script.js"],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+      "img/*",
+      "css/*",
+      "js/content_script.js"
+    ],
+    "permissions": [
+        "<all_urls>",
+        "activeTab",
+        "storage",
+        "tabs",
+        "webNavigation"
+    ]
+}
