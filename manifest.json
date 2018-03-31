@@ -34,8 +34,7 @@
 
     "web_accessible_resources": [
       "img/*",
-      "css/*",
-      "js/content_script.js"
+      "css/*"
     ],  
     "permissions": [
         "https://www.copart.com/*",
