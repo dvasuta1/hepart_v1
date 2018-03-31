@@ -22,14 +22,16 @@
         "scripts": ["js/storage.js", "js/background.js"],
         "persistent": false
     },
+
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
+            "matches": ["*://*.copart.com/lot/*", "*://*.copart.com/ru/lot/*"],
             "css": ["css/content_script.css"],
             "js": ["js/jquery.min.js", "js/content_script.js"],
-            "run_at": "document_end"
+            "run_at": "document_idle"
         }
     ],
+
     "web_accessible_resources": [
       "img/*",
       "css/*",

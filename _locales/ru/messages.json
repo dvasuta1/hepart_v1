@@ -1,36 +1,30 @@
 {
     "extName": {
         "message": "New Extension",
-        "description": "Имя расширения. Не переводить"
+        "description": "Ім'я додатку. Не перекладати"
     },
     "extDescr": {
-        "message": "Короткое описание расширения",
-        "description": "Короткое описание расширения"
+        "message": "Короткий опис додатку",
+        "description": "Короткий опис додатку"
     },
-
-    "o_tabs_help": {
-        "message": "Помощь",
-        "description": "Имя вкладки. Префикс 'o_' в имени указывает, что текст относится к странице настроек options.html"
+    "hepart_run": {
+        "message": "!Let's Hepart!",
+        "description": "Run button"
     },
-    "o_tabs_main": {
-        "message": "Основное",
-        "description": "Имя вкладки"
+    "hepart_repair_cost": {
+        "message": "Est. Repair Cost:",
+        "description": "Est. Repair Cost"
     },
-    "o_error": {
-        "message": "Ошибка во время сохранения настроек",
-        "description": "Сообщение об ошибке во время сохранении настроек в storage"
+    "hepart_seller_type": {
+        "message": "Seller type:",
+        "description": "Seller type"
     },
-    "o_saved": {
-        "message": "Изменения сохранены",
-        "description": "Сообщение о успешном сохранении настроек"
+    "hepart_seller_name": {
+        "message": "Seller:",
+        "description": "Seller name"
     },
-
-    "p_optionsBtn": {
-        "message": "Настройки",
-        "description": "Подсказка для кнопки.  Префикс 'p_' в имени указывает, что текст относится к popup"
-    },
-    "p_helpBtn": {
-        "message": "Помощь",
-        "description": "Подсказка для кнопки"
-    }
+    "hepart_final_price": {
+        "message": "Sold for ",
+        "description": "Final price"
+    }   
 }

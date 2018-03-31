@@ -1,7 +1,7 @@
 #hepart_button {
 	color: white;
     border-radius: 7px;
-    padding: 3px 10px 3px 35px;
+    padding: 3px 8px 3px 35px;
     background-color: gray; 
    	background-image:url('chrome-extension://__MSG_@@extension_id__/img/ext_icons/ic_bus_articulated_front_black_18dp.png');
    	background-repeat: no-repeat;

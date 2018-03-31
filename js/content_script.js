@@ -2,7 +2,6 @@ function drawHepardButton() {
 	var d = document.createElement('span');
 		$(d).attr('id', 'hepart_button')
 			.addClass('active')
-			/*	.css('background', 'url(' + chrome.extension.getURL('img/ext_icons/ic_bus_articulated_front_black_18dp.png') + ') orange no-repeat') */
 			.html(chrome.i18n.getMessage("hepart_run"))
 			.prependTo($("#exportLotDetails"))
 			.click(function () {
@@ -60,7 +59,11 @@ var formatter = new Intl.NumberFormat('en-US', {
 chrome.extension.onMessage.addListener(
 	function (request, sender, sendResponse) {
 			if (request.action === "drawHepartBtn") {
-				drawHepardButton();
+				setTimeout(function(){
+					drawHepardButton();
+				}, 2000)
+				
 			}
 	}
 );
+

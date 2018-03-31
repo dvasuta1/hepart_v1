@@ -1,4 +1,12 @@
 {
+    "extName": {
+        "message": "New Extension",
+        "description": "Ім'я додатку. Не перекладати"
+    },
+    "extDescr": {
+        "message": "Короткий опис додатку",
+        "description": "Короткий опис додатку"
+    },
     "hepart_run": {
         "message": "Let's Hepart!",
         "description": "Run button"
