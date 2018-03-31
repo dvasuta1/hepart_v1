@@ -1,10 +1,10 @@
 {
     "name": "Hepart",
     "description": "Показать всё, что скрыто",
-    "version": "0.1",
+    "version": "0.1.1",
     "manifest_version": 2,
     "minimum_chrome_version": "25",
-    "default_locale": "en",
+    "default_locale": "en", 
     "icons": {
         "16": "img/ext_icons/ic_bus_articulated_front_black_18dp.png",
         "48": "img/ext_icons/ic_bus_articulated_front_black_48dp.png"
@@ -19,7 +19,7 @@
     },
 
     "background": {
-        "scripts": ["js/storage.js", "js/background.js"],
+        "scripts": ["js/jquery.min.js", "js/storage.js", "js/background.js"],
         "persistent": false
     },
 
@@ -34,7 +34,8 @@
 
     "web_accessible_resources": [
       "img/*",
-      "css/*"
+      "css/*",
+      "/_locales/ru/messages.json"
     ],  
     "permissions": [
         "https://www.copart.com/*",

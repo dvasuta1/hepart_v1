@@ -1,3 +1,26 @@
+'use strict';
+
+chrome.storage.local.get('ruTranslations', function (messages) {
+	window.storedMessages = messages.ruTranslations
+});
+
+class LocalisationClass {
+
+	get isRussianLang() {
+		return $('.language_select .tabcolor') && $('.language_select .tabcolor').text() === 'Русский';
+	}
+
+	getMessage(key) {
+		console.debug('this.storedMessages', window.storedMessages);
+		let text = chrome.i18n.getMessage(key);
+
+		if (this.isRussianLang) {
+			text = window.storedMessages[key] && window.storedMessages[key].message;
+		}
+		return text;
+	}
+}
+
 function drawHepardButton() {
 	var d = document.createElement('span');
 		$(d).attr('id', 'hepart_button')
@@ -27,23 +50,26 @@ function getLotinfoById(callback) {
 }
 
 function insertTableRows(data) {
+	let localeEx = new LocalisationClass();
+
+	debugger;
 	var sellerRow = document.querySelectorAll('[data-uname~="lotdetailSeller"]');
 	if (sellerRow.length === 0 && data.std && data.snm) {
 		var container = $(document.querySelectorAll('[data-uname~="lotdetailPrimarydamage"]'));
 		container = container.parent().parent();
-		var tmpl = "<div><div class='details hepart_row'><label>" + chrome.i18n.getMessage("hepart_seller_type") + "</label><span class='lot-details-desc col-md-6'>" + data.std + "</span></div></div>"
-		tmpl += "<div><div class='details hepart_row'><label>" + chrome.i18n.getMessage("hepart_seller_name") + "</label><span  class='lot-details-desc col-md-6'>" + data.snm + "</span></div></div>"
+		var tmpl = "<div><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_seller_type") + "</label><span class='lot-details-desc col-md-6'>" + data.std + "</span></div></div>"
+		tmpl += "<div><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_seller_name") + "</label><span  class='lot-details-desc col-md-6'>" + data.snm + "</span></div></div>"
 		container.prepend($(tmpl));
 	}
 	if (data.rc) {
 		var container = $(document.querySelectorAll('[data-uname~="lotdetailVin"]'));
 		container = container.parent().parent();
-		var tmpl = "<div><div class='details hepart_row'><label>" + chrome.i18n.getMessage("hepart_repair_cost") + "</label><span class='lot-details-desc col-md-6'>" + formatter.format(data.rc) + " " + data.cuc + "</span></div></div>"
+		var tmpl = "<div><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_repair_cost") + "</label><span class='lot-details-desc col-md-6'>" + formatter.format(data.rc) + " " + data.cuc + "</span></div></div>"
 		container.prepend($(tmpl));
 	}
 	if (data.ahb !== 0) {
 		var container = $(document.querySelectorAll('[name=counterBidForm] .sold-bid .sold'));
-		var tmpl = "<div class='sold hepart_final_price'>" + chrome.i18n.getMessage("hepart_final_price") + formatter.format(data.ahb) + " " + data.cuc + "</div>"
+		var tmpl = "<div class='sold hepart_final_price'>" + localeEx.getMessage("hepart_final_price") + formatter.format(data.ahb) + " " + data.cuc + "</div>"
 		container.after($(tmpl));
 	}
 }
@@ -59,10 +85,9 @@ var formatter = new Intl.NumberFormat('en-US', {
 chrome.extension.onMessage.addListener(
 	function (request, sender, sendResponse) {
 			if (request.action === "drawHepartBtn") {
-				setTimeout(function(){
+			setTimeout(function () {
 					drawHepardButton();
 				}, 2000)
-				
 			}
 	}
 );

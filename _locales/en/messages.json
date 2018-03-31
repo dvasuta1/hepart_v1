@@ -1,10 +1,10 @@
 {
     "extName": {
-        "message": "New Extension",
+        "message": "Hepart",
         "description": "Ім'я додатку. Не перекладати"
     },
     "extDescr": {
-        "message": "Короткий опис додатку",
+        "message": "Copart helper",
         "description": "Короткий опис додатку"
     },
     "hepart_run": {

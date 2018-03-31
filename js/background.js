@@ -26,9 +26,23 @@ chrome.runtime.onInstalled.addListener(function (details) {
                 }
             }
         });
+
     }
 
+    function setRuTranslations() {
+        var url = chrome.extension.getURL("/_locales/ru/messages.json");
+        $.get(url, function (messages) {
+            console.log(messages);
+            if (messages) {
+                chrome.storage.local.set({"ruTranslations": messages });
+            }
+        }, "json");
+    };
+
     switch (details.reason) {
+        case 'install':
+            setRuTranslations();
+            break;
         case 'update':
             setDefaults();
             break;
@@ -36,6 +50,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
             break;
     }
 });
+
 
 chrome.runtime.onUpdateAvailable.addListener(function (details) {
     // when an update is available - reload extension
