@@ -8,23 +8,7 @@
         "description": "Короткий опис додатку"
     },
     "hepart_run": {
-        "message": "Let's Hepart!",
+        "message": "Поехали!",
         "description": "Run button"
-    },
-    "hepart_repair_cost": {
-        "message": "Оценочная стоимость ремонта:",
-        "description": "Est. Repair Cost"
-    },
-    "hepart_seller_type": {
-        "message": "Тип продавца:",
-        "description": "Seller type"
-    },
-    "hepart_seller_name": {
-        "message": "Продавец:",
-        "description": "Seller name"
-    },
-    "hepart_final_price": {
-        "message": "Продано за ",
-        "description": "Final price"
-    }   
+    }     
 }

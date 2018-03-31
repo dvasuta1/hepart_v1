@@ -29,20 +29,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
     }
 
-    function setRuTranslations() {
-        var url = chrome.extension.getURL("/_locales/ru/messages.json");
-        $.get(url, function (messages) {
-            console.log(messages);
-            if (messages) {
-                chrome.storage.local.set({"ruTranslations": messages });
-            }
-        }, "json");
-    };
-
     switch (details.reason) {
-        case 'install':
-            setRuTranslations();
-            break;
         case 'update':
             setDefaults();
             break;
@@ -58,6 +45,11 @@ chrome.runtime.onUpdateAvailable.addListener(function (details) {
     chrome.runtime.reload();
 });
 
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    if (changeInfo.status == 'complete' && tab.active) {
+        chrome.tabs.sendMessage(tab.id, { action: 'drawHepartBtn' });
+    }
+});
 
 // chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 //     chrome.tabs.query(
@@ -78,8 +70,3 @@ chrome.runtime.onUpdateAvailable.addListener(function (details) {
 // }); 
 
 
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    if (changeInfo.status == 'complete' && tab.active) {
-        chrome.tabs.sendMessage(tab.id, { action: 'drawHepartBtn' });
-    }
-})

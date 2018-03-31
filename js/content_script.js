@@ -1,37 +1,40 @@
 'use strict';
 
-chrome.storage.local.get('ruTranslations', function (messages) {
-	window.storedMessages = messages.ruTranslations
-});
-
 class LocalisationClass {
-
+	getCookie(name) {
+		var value = "; " + document.cookie;
+		var parts = value.split("; " + name + "=");
+		if (parts.length == 2) return parts.pop().split(";").shift();
+	}
+	get lang() {
+		return this.getCookie('userLang') || 'en';
+	}
 	get isRussianLang() {
-		return $('.language_select .tabcolor') && $('.language_select .tabcolor').text() === 'Русский';
+		return this.lang === 'ru';
 	}
 
 	getMessage(key) {
-		console.debug('this.storedMessages', window.storedMessages);
-		let text = chrome.i18n.getMessage(key);
-
-		if (this.isRussianLang) {
-			text = window.storedMessages[key] && window.storedMessages[key].message;
+		var text = chrome.i18n.getMessage(key);
+		var storedTranslations = domTranslations[this.lang];
+		if (storedTranslations[key] && storedTranslations[key].message) {
+			text = storedTranslations[key].message;
 		}
 		return text;
 	}
 }
+let localeEx = new LocalisationClass();
 
 function drawHepardButton() {
 	var d = document.createElement('span');
-		$(d).attr('id', 'hepart_button')
-			.addClass('active')
-			.html(chrome.i18n.getMessage("hepart_run"))
-			.prependTo($("#exportLotDetails"))
-			.click(function () {
-				$(this).removeClass('active');
-				$(this).off('click');
-				getLotinfoById(insertTableRows);
-			});
+	$(d).attr('id', 'hepart_button')
+		.addClass('active')
+		.html(localeEx.getMessage("hepart_run"))
+		.prependTo($("#exportLotDetails"))
+		.click(function () {
+			$(this).removeClass('active');
+			$(this).off('click');
+			getLotinfoById(insertTableRows);
+		});
 }
 
 function getLotinfoById(callback) {
@@ -50,9 +53,6 @@ function getLotinfoById(callback) {
 }
 
 function insertTableRows(data) {
-	let localeEx = new LocalisationClass();
-
-	debugger;
 	var sellerRow = document.querySelectorAll('[data-uname~="lotdetailSeller"]');
 	if (sellerRow.length === 0 && data.std && data.snm) {
 		var container = $(document.querySelectorAll('[data-uname~="lotdetailPrimarydamage"]'));
@@ -84,11 +84,11 @@ var formatter = new Intl.NumberFormat('en-US', {
 
 chrome.extension.onMessage.addListener(
 	function (request, sender, sendResponse) {
-			if (request.action === "drawHepartBtn") {
+		if (request.action === "drawHepartBtn") {
 			setTimeout(function () {
-					drawHepardButton();
-				}, 2000)
-			}
+				drawHepardButton();
+			}, 2000)
+		}
 	}
 );
 
