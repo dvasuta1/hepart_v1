@@ -25,10 +25,9 @@
 
     "content_scripts": [
         {
-            "matches": ["*://*.copart.com/lot/*", "*://*.copart.com/ru/lot/*"],
+            "matches": ["https://www.copart.com/*"],
             "css": ["css/content_script.css"],
-            "js": ["js/jquery.min.js", "js/translations.js", "js/content_script.js"],
-            "run_at": "document_idle"
+            "js": ["js/jquery.min.js", "js/translations.js", "js/content_script.js"]
         }
     ],
 

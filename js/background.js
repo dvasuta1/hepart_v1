@@ -38,7 +38,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
     }
 });
 
-
 chrome.runtime.onUpdateAvailable.addListener(function (details) {
     // when an update is available - reload extension
     // update will be install immediately
@@ -46,27 +45,9 @@ chrome.runtime.onUpdateAvailable.addListener(function (details) {
 });
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    if (changeInfo.status == 'complete' && tab.active) {
-        chrome.tabs.sendMessage(tab.id, { action: 'drawHepartBtn' });
+    if (changeInfo.status == 'complete' && tab.url.indexOf('/lot/') !== -1 && tab.active) {
+        console.log('BG');  
+        chrome.tabs.sendMessage(tabId, { action: 'drawHepartBtn' });
     }
 });
-
-// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-//     chrome.tabs.query(
-//         { currentWindow: true, active: true },
-//         function (tabArray) {
-
-//    if (tabArray.length !== 0 && tabArray[0].status == 'complete') {   
-// debugger;
-//             chrome.tabs.executeScript(tabArray[0].id, {
-//                 file: 'js/content_script.js'
-//              }, function() { 
-
-//             })
-//         }
-
-//         }
-//     );
-// }); 
-
 
