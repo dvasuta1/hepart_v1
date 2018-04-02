@@ -46,7 +46,6 @@ chrome.runtime.onUpdateAvailable.addListener(function (details) {
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (changeInfo.status == 'complete' && tab.url.indexOf('/lot/') !== -1 && tab.active) {
-        console.log('BG');  
         chrome.tabs.sendMessage(tabId, { action: 'drawHepartBtn' });
     }
 });

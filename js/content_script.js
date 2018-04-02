@@ -1,5 +1,8 @@
 'use strict';
 
+//TODO:
+//All this fucking crap must be refactored in next version
+
 class LocalisationClass {
 	getCookie(name) {
 		var value = "; " + document.cookie;
@@ -8,9 +11,6 @@ class LocalisationClass {
 	}
 	get lang() {
 		return this.getCookie('userLang') || 'en';
-	}
-	get isRussianLang() {
-		return this.lang === 'ru';
 	}
 	getMessage(key) {
 		var text = chrome.i18n.getMessage(key);
@@ -21,17 +21,20 @@ class LocalisationClass {
 		return text;
 	}
 }
+
 var localeEx = new LocalisationClass();
 
 function drawHepardButton() {
-	resetAll();
+	//resetAll();
 	var d = document.createElement('span');
 	$(d).attr('id', 'hepart_button')
-		.addClass('active')
-		.html(localeEx.getMessage("hepart_run"))
+		.attr('data-content', localeEx.getMessage("hepart_run"))
 		.prependTo($("#exportLotDetails"))
+		.css({
+			width: $('#hepart_button').css('width'),
+		})
 		.click(function () {
-			$(this).removeClass('active');
+			$(this).addClass('active');
 			$(this).off('click');
 			getLotinfoById(insertTableRows); 
 		});
@@ -59,7 +62,11 @@ function getLotinfoById(callback) {
 
 function insertTableRows(data) {
 	var sellerRow = document.querySelectorAll('[data-uname~="lotdetailSeller"]');
-	if (sellerRow.length === 0 && data.std && data.snm) {
+	var isSellerRowDataAvailable = sellerRow.length === 0 && data.std && data.snm;
+	var isRepairCostDataAvailable = data.rc;
+	var isFinalPriceDataAvailable = data.ahb !== 0;
+
+	if (isSellerRowDataAvailable) {
 		var container = $(document.querySelectorAll('[data-uname~="lotdetailPrimarydamage"]'));
 		container = container.parent().parent();
 		var tmpl = "<div id='hepart_seller_type'><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_seller_type") + "</label><span class='lot-details-desc col-md-6'>" + data.std + "</span></div></div>"
@@ -77,6 +84,12 @@ function insertTableRows(data) {
 		var tmpl = "<div id='hepart_final_price' class='sold hepart_final_price'>" + localeEx.getMessage("hepart_final_price") + formatter.format(data.ahb) + " " + data.cuc + "</div>"
 		container.after($(tmpl));
 	}
+
+	if(!isSellerRowDataAvailable && isRepairCostDataAvailable && isFinalPriceDataAvailable) {
+		var container = $('#hepart_button');
+		var tmpl = "<span id='hepart_no_data'>" + localeEx.getMessage("hepart_no_data") + "</span>";
+		container.before($(tmpl));
+	}
 }
 
 var formatter = new Intl.NumberFormat('en-US', {
@@ -86,39 +99,17 @@ var formatter = new Intl.NumberFormat('en-US', {
 	maximumFractionDigits: 0
 });
 
-/*
-document.addEventListener("click", (e) => {
-	if (e.target.classList.contains("beast")) {
-	  var chosenBeast = e.target.textContent;
-	  var chosenBeastURL = beastNameToURL(chosenBeast);
-  
-	  browser.tabs.executeScript(null, { 
-		file: "/content_scripts/beastify.js" 
-	  });
-  
-	  var gettingActiveTab = browser.tabs.query({active: true, currentWindow: true});
-	  gettingActiveTab.then((tabs) => {
-		browser.tabs.sendMessage(tabs[0].id, {beastURL: chosenBeastURL});
-	  });
-	}
-	else if (e.target.classList.contains("clear")) {
-	  browser.tabs.reload();
-	  window.close();
-	}
-  });
-*/
-
 chrome.extension.onMessage.addListener(
 	function (request, sender, sendResponse) {
 		if (request.action === "drawHepartBtn") {
 			setTimeout(function () {
-				console.log('GO!');
-				$('.view-all-photos .viewalltxt', '#lot-images-wrapper > div > div.lot-details-actions.no-margin > a').click(function(){
-					drawHepardButton();
+				$('.view-all-photos .viewalltxt, #lot-images-wrapper > div > div.lot-details-actions.no-margin > a').click(function(){
+					if (!$('#hepart_button').hasClass('active')) {
+						drawHepardButton();
+					}
 			   });	
 			   drawHepardButton();
 			}, 2000)
 		}
 	}
 );
-

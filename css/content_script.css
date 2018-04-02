@@ -1,20 +1,55 @@
 #hepart_button {
 	color: white;
     border-radius: 7px;
-    padding: 3px 8px 3px 35px;
-    background-color: gray; 
-   	background-image:url('chrome-extension://__MSG_@@extension_id__/img/ext_icons/ic_bus_articulated_front_black_18dp.png');
-   	background-repeat: no-repeat;
-   	background-size: contain;
-   	background-position: 5px center;
-}
-#hepart_button.active { 
+	padding: 3px 8px 3px 8px;
+	height: 26px;
+	display: inline-block;
+	overflow: hidden;
+    position: relative;
+    transition: width 300ms;
+	white-space: nowrap;
 	cursor: pointer;
-    background-color: orange; 
+	background-color: orange; 
+	vertical-align: middle;
+}
+#hepart_button::before {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/ext_icons/ic_bus_articulated_front_black_18dp.png');
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: 5px center;
+	display: inline-block;
+	content: '';
+    background-size: 100%;
+    background-position: center;
+    background-color: transparent;
+    transform: translateY(6px);
+    line-height: 37px;
+	vertical-align: -webkit-baseline-middle;
+	transform: translateY(-25%) !important;
+	height: 16px;
+    width: 27px;
+	margin-right: 10px;
+}
+
+span#hepart_button::after {
+    content: attr(data-content);
+    display: inline-block;
+}
+
+#hepart_button.active { 
+	width: 42px !important;
+	background-color: gray; 
+	cursor: default;
 }
 .hepart_row {
 	background-color: orange;
 }
 .sold.hepart_final_price {
+	background-color: orange;
+}
+#hepart_no_data {
+	padding: 1px 3px;
+	margin-right:10px;
+	color:white;
 	background-color: orange;
 }

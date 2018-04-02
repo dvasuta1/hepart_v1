@@ -19,7 +19,11 @@ var domTranslations = {
 		"hepart_final_price": {
 			"message": "Продано за ",
 			"description": "Final price"
-		}
+		},
+		"hepart_no_data": {
+			"message": "Ничего нового:(",
+			"description": "Final price"
+		}		
 	},
 	en: {
 		"hepart_run": {
@@ -41,6 +45,10 @@ var domTranslations = {
 		"hepart_final_price": {
 			"message": "Sold for ",
 			"description": "Final price"
-		}
+		},
+		"hepart_no_data": {
+			"message": "No useful data available",
+			"description": "Final price"
+		}	
 	}
 }
