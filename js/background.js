@@ -29,20 +29,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
     }
 
-    function setRuTranslations() {
-        var url = chrome.extension.getURL("/_locales/ru/messages.json");
-        $.get(url, function (messages) {
-            console.log(messages);
-            if (messages) {
-                chrome.storage.local.set({"ruTranslations": messages });
-            }
-        }, "json");
-    };
-
     switch (details.reason) {
-        case 'install':
-            setRuTranslations();
-            break;
         case 'update':
             setDefaults();
             break;
@@ -51,35 +38,15 @@ chrome.runtime.onInstalled.addListener(function (details) {
     }
 });
 
-
 chrome.runtime.onUpdateAvailable.addListener(function (details) {
     // when an update is available - reload extension
     // update will be install immediately
     chrome.runtime.reload();
 });
 
-
-// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-//     chrome.tabs.query(
-//         { currentWindow: true, active: true },
-//         function (tabArray) {
-
-//    if (tabArray.length !== 0 && tabArray[0].status == 'complete') {   
-// debugger;
-//             chrome.tabs.executeScript(tabArray[0].id, {
-//                 file: 'js/content_script.js'
-//              }, function() { 
-
-//             })
-//         }
-
-//         }
-//     );
-// }); 
-
-
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    if (changeInfo.status == 'complete' && tab.active) {
-        chrome.tabs.sendMessage(tab.id, { action: 'drawHepartBtn' });
+    if (changeInfo.status == 'complete' && tab.url.indexOf('/lot/') !== -1 && tab.active) {
+        chrome.tabs.sendMessage(tabId, { action: 'drawHepartBtn' });
     }
-})
+});
+
