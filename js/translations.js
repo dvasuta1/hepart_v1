@@ -27,7 +27,7 @@ var domTranslations = {
 	},
 	en: {
 		"hepart_run": {
-			"message": "Let's Hepart!",
+			"message": "Show me!",
 			"description": "Run button"
 		},
 		"hepart_repair_cost": {
