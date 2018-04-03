@@ -102,7 +102,7 @@ chrome.extension.onMessage.addListener(
 		if (request.action === "drawHepartBtn") {
 			var i = setInterval(
 				function () { 
-					if ($('#exportButton').length === 0) return; 
+					if ($('#email').length === 0) return; 
 					clearInterval(i); 
 					drawHepardButton(); 
 				}, 1000);

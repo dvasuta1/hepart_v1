@@ -1,9 +1,10 @@
 {
     "name": "__MSG_extName__",
     "description": "__MSG_extDescr__",
-    "version": "0.1.5",
+    "short_name": "__MSG_extName__",
+    "version": "0.1.6",
     "manifest_version": 2,
-    "minimum_chrome_version": "25",
+    "minimum_chrome_version": "25", 
     "default_locale": "en", 
     "icons": {
         "16": "img/ext_icons/heppart_logo_16.png",
@@ -16,7 +17,7 @@
             "19": "img/ext_icons/ic_bus_articulated_front_black_18dp.png",
             "38": "img/ext_icons/ic_bus_articulated_front_black_48dp.png"
         },
-        "default_title": "Hepart"
+        "default_title": "__MSG_extName__"
     },
 
     "background": {
