@@ -25,7 +25,6 @@ class LocalisationClass {
 var localeEx = new LocalisationClass();
 
 function drawHepardButton() {
-	//resetAll();
 	var d = document.createElement('span');
 	$(d).attr('id', 'hepart_button')
 		.attr('data-content', localeEx.getMessage("hepart_run"))
@@ -41,7 +40,6 @@ function drawHepardButton() {
 }
 
 function resetAll(){
-	//$.when($('#hepart_button, #hepart_seller_type, #hepart_seller_name, #hepart_final_price').remove()).then( cb );
 	$('#hepart_button, #hepart_seller_type, #hepart_seller_name, #hepart_final_price').remove();
 }
 
@@ -85,7 +83,7 @@ function insertTableRows(data) {
 		container.after($(tmpl));
 	}
 
-	if(!isSellerRowDataAvailable && isRepairCostDataAvailable && isFinalPriceDataAvailable) {
+	if(!isSellerRowDataAvailable && !isRepairCostDataAvailable && !isFinalPriceDataAvailable) {
 		var container = $('#hepart_button');
 		var tmpl = "<span id='hepart_no_data'>" + localeEx.getMessage("hepart_no_data") + "</span>";
 		container.before($(tmpl));
@@ -102,14 +100,12 @@ var formatter = new Intl.NumberFormat('en-US', {
 chrome.extension.onMessage.addListener(
 	function (request, sender, sendResponse) {
 		if (request.action === "drawHepartBtn") {
-			setTimeout(function () {
-				$('.view-all-photos .viewalltxt, #lot-images-wrapper > div > div.lot-details-actions.no-margin > a').click(function(){
-					if (!$('#hepart_button').hasClass('active')) {
-						drawHepardButton();
-					}
-			   });	
-			   drawHepardButton();
-			}, 2000)
+			var i = setInterval(
+				function () { 
+					if ($('#exportButton').length === 0) return; 
+					clearInterval(i); 
+					drawHepardButton(); 
+				}, 1000);
 		}
 	}
 );

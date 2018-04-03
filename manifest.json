@@ -1,13 +1,14 @@
 {
     "name": "__MSG_extName__",
     "description": "__MSG_extDescr__",
-    "version": "0.1.2",
+    "version": "0.1.5",
     "manifest_version": 2,
     "minimum_chrome_version": "25",
     "default_locale": "en", 
     "icons": {
-        "16": "img/ext_icons/ic_bus_articulated_front_black_18dp.png",
-        "48": "img/ext_icons/ic_bus_articulated_front_black_48dp.png"
+        "16": "img/ext_icons/heppart_logo_16.png",
+        "48": "img/ext_icons/heppart_logo_48.png",
+        "128": "img/ext_icons/heppart_logo_128.png"
     },
 
     "page_action": {
@@ -32,15 +33,12 @@
     ],
 
     "web_accessible_resources": [
-      "img/*",
-      "css/*",
-      "/_locales/ru/messages.json"
+      "img/*"
     ],  
     "permissions": [
         "https://www.copart.com/*",
         "activeTab",
         "storage",
-        "tabs",
-        "webNavigation"
+        "tabs"
     ]
 }
