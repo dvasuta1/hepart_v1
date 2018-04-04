@@ -52,3 +52,6 @@ span#hepart_button::after {
 	color:white;
 	background-color: orange;
 }
+#serverSideDataTable.dataTable  tr.dealer {
+	background-color: #ff822a !important;
+}

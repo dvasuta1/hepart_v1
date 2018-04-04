@@ -48,5 +48,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (changeInfo.status == 'complete' && tab.url.indexOf('/lot/') !== -1 && tab.active) {
         chrome.tabs.sendMessage(tabId, { action: 'drawHepartBtn' });
     }
+    if (changeInfo.status == 'complete' && tab.url.indexOf('/quickpick/') !== -1 && tab.active) {
+        chrome.tabs.sendMessage(tabId, { action: 'drawDealers' });
+    }
 });
 

@@ -1,7 +1,7 @@
 'use strict';
 
 //TODO:
-//All this fucking crap must be refactored in next version
+//All this fucking crap must be refactored in next major version
 
 class LocalisationClass {
 	getCookie(name) {
@@ -35,11 +35,11 @@ function drawHepardButton() {
 		.click(function () {
 			$(this).addClass('active');
 			$(this).off('click');
-			getLotinfoById(insertTableRows); 
+			getLotinfoById(insertTableRows);
 		});
 }
 
-function resetAll(){
+function resetAll() {
 	$('#hepart_button, #hepart_seller_type, #hepart_seller_name, #hepart_final_price').remove();
 }
 
@@ -70,12 +70,17 @@ function insertTableRows(data) {
 		var tmpl = "<div id='hepart_seller_type'><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_seller_type") + "</label><span class='lot-details-desc col-md-6'>" + data.std + "</span></div></div>"
 		tmpl += "<div id='hepart_seller_name'><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_seller_name") + "</label><span  class='lot-details-desc col-md-6'>" + data.snm + "</span></div></div>"
 		container.prepend($(tmpl));
+		if (data.std.toLowerCase().indexOf('dealer') !== -1) {
+			storeDataToSync('dealersList', data.lotNumberStr);
+		}
 	}
 	if (data.rc) {
 		var container = $(document.querySelectorAll('[data-uname~="lotdetailVin"]'));
 		container = container.parent().parent();
 		var tmpl = "<div id='hepart_repair_cost'><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_repair_cost") + "</label><span class='lot-details-desc col-md-6'>" + formatter.format(data.rc) + " " + data.cuc + "</span></div></div>"
 		container.prepend($(tmpl));
+		//store if seller is dealer
+
 	}
 	if (data.ahb !== 0) {
 		var container = $(document.querySelectorAll('[name=counterBidForm] .sold-bid .sold'));
@@ -83,7 +88,7 @@ function insertTableRows(data) {
 		container.after($(tmpl));
 	}
 
-	if(!isSellerRowDataAvailable && !isRepairCostDataAvailable && !isFinalPriceDataAvailable) {
+	if (!isSellerRowDataAvailable && !isRepairCostDataAvailable && !isFinalPriceDataAvailable) {
 		var container = $('#hepart_button');
 		var tmpl = "<span id='hepart_no_data'>" + localeEx.getMessage("hepart_no_data") + "</span>";
 		container.before($(tmpl));
@@ -101,11 +106,57 @@ chrome.extension.onMessage.addListener(
 	function (request, sender, sendResponse) {
 		if (request.action === "drawHepartBtn") {
 			var i = setInterval(
-				function () { 
-					if ($('#email').length === 0) return; 
-					clearInterval(i); 
-					drawHepardButton(); 
+				function () {
+					if ($('#email').length === 0) return;
+					clearInterval(i);
+					drawHepardButton();
 				}, 1000);
+		}
+		if (request.action === "drawDealers") {
+			var i = setInterval(
+				function () {
+					if ($('#serverSideDataTable tr').length === 0) return;
+					clearInterval(i);
+					markDealersOnTable('dealersList', '#serverSideDataTable tr');
+				}, 2000);
 		}
 	}
 );
+
+function storeDataToSync(storageName, lotId) {
+	chrome.storage.sync.get(storageName, function (obj) {
+		var storedData = !_.isEmpty(obj) && JSON.parse(obj[storageName]);
+		debugger;
+		if (_.isUndefined(obj[storageName])) {
+			var d = JSON.stringify(new Array(lotId));
+			putIntoStore(storageName, d)
+		} else if (storedData && _.indexOf(storedData, lotId) === -1) {
+			storedData.push(lotId);
+			storedData = JSON.stringify(storedData);
+			putIntoStore(storageName, storedData);
+		}
+	});
+}
+
+function putIntoStore(storageName, storedData) {
+	var dataToStore = {};
+	dataToStore[storageName] = storedData;
+	chrome.storage.sync.set(dataToStore, function () {
+		if (chrome.runtime.error) {
+			console.log("Runtime error.");
+		}
+	});
+}
+
+function markDealersOnTable(storageName, element) {
+	var selector = $(element);
+
+	chrome.storage.sync.get(storageName, function (obj) {
+		var storedData = !_.isEmpty(obj) && JSON.parse(obj[storageName]);
+		if (storedData) {
+			_.each(storedData, function (item) {
+				selector.find(' a[data-url="./lot/' + item + '"]').closest('tr').addClass('dealer');
+			});	
+		}
+	});
+}
