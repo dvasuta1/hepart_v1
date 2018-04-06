@@ -23,7 +23,7 @@ var domTranslations = {
 		"hepart_no_data": {
 			"message": "Ничего нового:(",
 			"description": "Final price"
-		}		
+		}
 	},
 	en: {
 		"hepart_run": {
@@ -49,6 +49,47 @@ var domTranslations = {
 		"hepart_no_data": {
 			"message": "No useful data available",
 			"description": "Final price"
-		}	
+		}
+	}
+};
+
+function getTranslatedText(key) {
+	var getCookie = function (name) {
+		var value = "; " + document.cookie;
+		var parts = value.split("; " + name + "=");
+		if (parts.length == 2) return parts.pop().split(";").shift();
+	};
+	var getLang = function () {
+		return getCookie('userLang') || 'en';
+	};
+
+	var text = chrome.i18n.getMessage(key);
+	var lang = getLang();
+	var storedTranslations = domTranslations[lang];
+	if (storedTranslations[key] && storedTranslations[key].message) {
+		text = storedTranslations[key].message;
+	}
+	return text;
+
+}
+
+/*class LocalisationClass {
+	getCookie(name) {
+		var value = "; " + document.cookie;
+		var parts = value.split("; " + name + "=");
+		if (parts.length == 2) return parts.pop().split(";").shift();
+	}
+	get lang() {
+		return this.getCookie('userLang') || 'en';
+	}
+	getMessage(key) {
+		var text = chrome.i18n.getMessage(key);
+		var storedTranslations = domTranslations[this.lang];
+		if (storedTranslations[key] && storedTranslations[key].message) {
+			text = storedTranslations[key].message;
+		}
+		return text;
 	}
 }
+
+var localeEx = new LocalisationClass(); */
