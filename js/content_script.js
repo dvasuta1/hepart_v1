@@ -1,33 +1,14 @@
 'use strict';
 
 //TODO:
-//All this fucking crap must be refactored in next version
+//All this fucking crap must be refactored in next major version
 
-class LocalisationClass {
-	getCookie(name) {
-		var value = "; " + document.cookie;
-		var parts = value.split("; " + name + "=");
-		if (parts.length == 2) return parts.pop().split(";").shift();
-	}
-	get lang() {
-		return this.getCookie('userLang') || 'en';
-	}
-	getMessage(key) {
-		var text = chrome.i18n.getMessage(key);
-		var storedTranslations = domTranslations[this.lang];
-		if (storedTranslations[key] && storedTranslations[key].message) {
-			text = storedTranslations[key].message;
-		}
-		return text;
-	}
-}
 
-var localeEx = new LocalisationClass();
 
 function drawHepardButton() {
 	var d = document.createElement('span');
 	$(d).attr('id', 'hepart_button')
-		.attr('data-content', localeEx.getMessage("hepart_run"))
+		.attr('data-content', getTranslatedText("hepart_run"))
 		.prependTo($("#exportLotDetails"))
 		.css({
 			width: $('#hepart_button').css('width'),
@@ -35,12 +16,8 @@ function drawHepardButton() {
 		.click(function () {
 			$(this).addClass('active');
 			$(this).off('click');
-			getLotinfoById(insertTableRows); 
+			getLotinfoById(insertTableRows);
 		});
-}
-
-function resetAll(){
-	$('#hepart_button, #hepart_seller_type, #hepart_seller_name, #hepart_final_price').remove();
 }
 
 function getLotinfoById(callback) {
@@ -67,25 +44,28 @@ function insertTableRows(data) {
 	if (isSellerRowDataAvailable) {
 		var container = $(document.querySelectorAll('[data-uname~="lotdetailPrimarydamage"]'));
 		container = container.parent().parent();
-		var tmpl = "<div id='hepart_seller_type'><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_seller_type") + "</label><span class='lot-details-desc col-md-6'>" + data.std + "</span></div></div>"
-		tmpl += "<div id='hepart_seller_name'><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_seller_name") + "</label><span  class='lot-details-desc col-md-6'>" + data.snm + "</span></div></div>"
+		var tmpl = "<div id='hepart_seller_type'><div class='details hepart_row'><label>" + getTranslatedText("hepart_seller_type") + "</label><span class='lot-details-desc col-md-6'>" + data.std + "</span></div></div>"
+		tmpl += "<div id='hepart_seller_name'><div class='details hepart_row'><label>" + getTranslatedText("hepart_seller_name") + "</label><span  class='lot-details-desc col-md-6'>" + data.snm + "</span></div></div>"
 		container.prepend($(tmpl));
+		if (data.std.toLowerCase().indexOf('dealer') !== -1) {
+			storeDataToDB('dealersList', data.lotNumberStr);
+		}
 	}
 	if (data.rc) {
 		var container = $(document.querySelectorAll('[data-uname~="lotdetailVin"]'));
 		container = container.parent().parent();
-		var tmpl = "<div id='hepart_repair_cost'><div class='details hepart_row'><label>" + localeEx.getMessage("hepart_repair_cost") + "</label><span class='lot-details-desc col-md-6'>" + formatter.format(data.rc) + " " + data.cuc + "</span></div></div>"
+		var tmpl = "<div id='hepart_repair_cost'><div class='details hepart_row'><label>" + getTranslatedText("hepart_repair_cost") + "</label><span class='lot-details-desc col-md-6'>" + formatter.format(data.rc) + " " + data.cuc + "</span></div></div>"
 		container.prepend($(tmpl));
 	}
 	if (data.ahb !== 0) {
 		var container = $(document.querySelectorAll('[name=counterBidForm] .sold-bid .sold'));
-		var tmpl = "<div id='hepart_final_price' class='sold hepart_final_price'>" + localeEx.getMessage("hepart_final_price") + formatter.format(data.ahb) + " " + data.cuc + "</div>"
+		var tmpl = "<div id='hepart_final_price' class='sold hepart_final_price'>" + getTranslatedText("hepart_final_price") + formatter.format(data.ahb) + " " + data.cuc + "</div>"
 		container.after($(tmpl));
 	}
 
-	if(!isSellerRowDataAvailable && !isRepairCostDataAvailable && !isFinalPriceDataAvailable) {
+	if (!isSellerRowDataAvailable && !isRepairCostDataAvailable && !isFinalPriceDataAvailable) {
 		var container = $('#hepart_button');
-		var tmpl = "<span id='hepart_no_data'>" + localeEx.getMessage("hepart_no_data") + "</span>";
+		var tmpl = "<span id='hepart_no_data'>" + getTranslatedText("hepart_no_data") + "</span>";
 		container.before($(tmpl));
 	}
 }
@@ -99,13 +79,70 @@ var formatter = new Intl.NumberFormat('en-US', {
 
 chrome.extension.onMessage.addListener(
 	function (request, sender, sendResponse) {
-		if (request.action === "drawHepartBtn") {
+		/*if (request.action === "drawHepartBtn") {
 			var i = setInterval(
-				function () { 
-					if ($('#email').length === 0) return; 
-					clearInterval(i); 
-					drawHepardButton(); 
+				function () {
+					if ($('#email').length === 0) return;
+					clearInterval(i);
+					drawHepardButton();
 				}, 1000);
+		}*/
+		if (request.action === "drawDealers") {
+			var i = setInterval(
+				function () {
+					if ($('#serverSideDataTable tr').length === 0) return;
+					clearInterval(i);
+					markDealersOnTable('dealersList', '#serverSideDataTable tr');
+				}, 2000);
+		}
+		if (request.action === "drawHepartBtn") {
+			var mutationsCallback = function (allmutations) {
+					mo.disconnect();
+					drawHepardButton();
+				},
+				mo = new MutationObserver(mutationsCallback),
+				options = {
+					'childList': true,
+					'attributeFilter': ['class']
+				}
+			mo.observe($('.inner-wrap')[0], options);
 		}
 	}
 );
+
+function storeDataToDB(storageName, lotId) {
+	chrome.storage.local.get(storageName, function (obj) {
+		var storedData = !_.isEmpty(obj) && JSON.parse(obj[storageName]);
+		if (_.isUndefined(obj[storageName])) {
+			var d = JSON.stringify(new Array(lotId));
+			putIntoStore(storageName, d)
+		} else if (storedData && _.indexOf(storedData, lotId) === -1) {
+			storedData.push(lotId);
+			storedData = JSON.stringify(storedData);
+			putIntoStore(storageName, storedData);
+		}
+	});
+}
+
+function putIntoStore(storageName, storedData) {
+	var dataToStore = {};
+	dataToStore[storageName] = storedData;
+	chrome.storage.local.set(dataToStore, function () {
+		if (chrome.runtime.error) {
+			console.log("Runtime error.");
+		}
+	});
+}
+
+function markDealersOnTable(storageName, element) {
+	var selector = $(element);
+
+	chrome.storage.local.get(storageName, function (obj) {
+		var storedData = !_.isEmpty(obj) && JSON.parse(obj[storageName]);
+		if (storedData) {
+			_.each(storedData, function (item) {
+				selector.find(' a[data-url="./lot/' + item + '"]').closest('tr').addClass('dealer');
+			});
+		}
+	});
+}
